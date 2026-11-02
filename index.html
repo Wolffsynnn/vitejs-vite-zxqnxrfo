@@ -8,12 +8,11 @@
   </head>
   <body>
     
-    <!-- ÉCRAN 1 : CONNEXION (CraftID) -->
+    <!-- ÉCRAN 1 : CONNEXION -->
     <div id="login-screen" class="screen active">
       <div class="auth-container">
         <div class="auth-card">
           <div class="auth-logo">
-            <!-- Nouvelle icône CraftID -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 50px; height: 50px; color: #a78bfa;">
               <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
               <circle cx="9" cy="10" r="2"></circle>
@@ -32,6 +31,42 @@
             Se connecter avec Discord
           </button>
           <p class="auth-footer">Serveur Minecraft RP • EuriaApps</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÉCRAN 1.5 : ONBOARDING (Formulaire RP) -->
+    <div id="onboarding-screen" class="screen">
+      <div class="auth-container">
+        <div class="auth-card" style="text-align: left;">
+          <h2 class="auth-title" style="text-align: center; margin-bottom: 20px;">Bienvenue !</h2>
+          <p class="auth-subtitle" style="text-align: center; margin-bottom: 30px;">Complète ton profil pour rejoindre Euria.</p>
+          
+          <form id="onboarding-form">
+            <div class="input-group">
+              <label>Pseudo EuriaApps</label>
+              <input type="text" id="pseudo-euria" required placeholder="Ex: JeanDuCraft">
+            </div>
+            
+            <div class="input-group">
+              <label>Pseudo Minecraft</label>
+              <input type="text" id="pseudo-mc" required placeholder="Ex: Jean_MC">
+            </div>
+            
+            <div class="input-group">
+              <label>Prénom et Nom RP</label>
+              <input type="text" id="nom-rp" required placeholder="Ex: Jean Dupont">
+            </div>
+            
+            <div class="input-group">
+              <label>Âge RP</label>
+              <input type="number" id="age-rp" required min="1" max="120" placeholder="Ex: 25">
+            </div>
+
+            <button type="submit" id="save-profile-btn" class="btn-discord" style="margin-top: 20px;">
+              Créer mon profil
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -63,100 +98,55 @@
 
       <main class="hub-main">
         <div class="apps-grid">
+          <!-- Les icônes PayCraft, MapLoad, etc. (inchangées) -->
+          <a href="#" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span>PayCraft</span></a>
+          <a href="#" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div><span>MapLoad</span></a>
+          <a href="#" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></div><span>MarketPlace</span></a>
+          <a href="#" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #1d4ed8, #1e3a8a);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><span>SafeCity</span></a>
+          <a href="#" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 4v16m-8-8h16"></path></svg></div><span>VitaLine</span></a>
+          <a href="#" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #eab308, #ca8a04);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H7.5c-.7 0-1.3.3-1.8.7C4.8 8.6 3 10 3 10s-2.7.6-4.5 1.1c-.8.2-1.5 1-1.5 1.9v3c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg></div><span>GoTaxi</span></a>
           
-          <!-- PayCraft (Billet / Dollar) -->
-          <a href="#" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="1" x2="12" y2="23"></line>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-              </svg>
-            </div>
-            <span>PayCraft</span>
-          </a>
-          
-          <!-- MapLoad (Carte / Localisation) -->
-          <a href="#" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-            </div>
-            <span>MapLoad</span>
-          </a>
-          
-          <!-- MarketPlace (Panier) -->
-          <a href="#" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-              </svg>
-            </div>
-            <span>MarketPlace</span>
-          </a>
-          
-          <!-- SafeCity (Bouclier) -->
-          <a href="#" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #1d4ed8, #1e3a8a);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
-            </div>
-            <span>SafeCity</span>
-          </a>
-          
-          <!-- VitaLine (Croix / Santé) -->
-          <a href="#" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 4v16m-8-8h16"></path>
-              </svg>
-            </div>
-            <span>VitaLine</span>
-          </a>
-          
-          <!-- GoTaxi (Voiture) -->
-          <a href="#" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #eab308, #ca8a04);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H7.5c-.7 0-1.3.3-1.8.7C4.8 8.6 3 10 3 10s-2.7.6-4.5 1.1c-.8.2-1.5 1-1.5 1.9v3c0 .6.4 1 1 1h2"></path>
-                <circle cx="7" cy="17" r="2"></circle>
-                <path d="M9 17h6"></path>
-                <circle cx="17" cy="17" r="2"></circle>
-              </svg>
-            </div>
-            <span>GoTaxi</span>
-          </a>
-          
-          <!-- CraftID (Carte d'identité) -->
-          <a href="#" class="app">
+          <a href="#" id="craftid-btn" class="app">
             <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
-                <circle cx="9" cy="10" r="2"></circle>
-                <path d="M15 8h2"></path>
-                <path d="M15 12h2"></path>
-                <path d="M7 16h10"></path>
-              </svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M15 8h2"></path><path d="M15 12h2"></path><path d="M7 16h10"></path></svg>
             </div>
             <span>CraftID</span>
           </a>
           
-          <!-- AdminZone (Dossier / Paramètres) -->
-          <a href="#" id="adminzone-btn" class="app">
-            <div class="app-icon" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                <line x1="12" y1="11" x2="12" y2="17"></line>
-                <line x1="9" y1="14" x2="15" y2="14"></line>
-              </svg>
-            </div>
-            <span>AdminZone</span>
-          </a>
+          <a href="#" id="adminzone-btn" class="app"><div class="app-icon" style="background: linear-gradient(135deg, #6b7280, #4b5563);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg></div><span>AdminZone</span></a>
+        </div>
+      </main>
+    </div>
 
+    <!-- ÉCRAN 3 : CRAFTID (Profil) -->
+    <div id="craftid-screen" class="screen">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button id="back-to-hub-btn" class="icon-btn" title="Retour">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px; color: #9ca3af;">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <span class="sub-brand" style="margin-left: 10px;">CraftID • Profil</span>
+        </div>
+      </header>
+
+      <main class="hub-main" style="align-items: center;">
+        <div class="profile-card" style="background: rgba(30, 36, 58, 0.6); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); text-align: center; max-width: 400px; width: 100%;">
+          <img id="user-avatar" src="" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid #8b5cf6; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+          <h2 id="user-name" style="font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 5px;">Chargement...</h2>
+          <p id="user-rp-name" style="font-size: 14px; color: #9ca3af; margin-bottom: 10px;">Prénom Nom RP</p>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left;">
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 5px;">Pseudo Minecraft</p>
+            <p id="user-mc" style="font-size: 14px; color: #fff; font-weight: 500; margin-bottom: 15px;">...</p>
+            
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 5px;">Âge RP</p>
+            <p id="user-age" style="font-size: 14px; color: #fff; font-weight: 500; margin-bottom: 15px;">...</p>
+
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 5px;">ID Discord</p>
+            <p id="user-id" style="font-size: 12px; color: #8b5cf6; font-family: monospace;">...</p>
+          </div>
         </div>
       </main>
     </div>

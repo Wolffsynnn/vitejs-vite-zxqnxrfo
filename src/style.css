@@ -24,7 +24,7 @@
     width: 100%;
     min-height: 100vh;
     flex-direction: column;
-    animation: fadeIn 0.4s ease-out;
+    animation: fadeIn 0.3s ease-out;
   }
   
   .screen.active {
@@ -69,6 +69,9 @@
     line-height: 90px;
     border-radius: 20px;
     margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
   }
   
@@ -218,6 +221,7 @@
     text-decoration: none;
     color: white;
     transition: transform 0.2s ease;
+    cursor: pointer;
   }
   
   .app:hover {
@@ -231,7 +235,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     margin-bottom: 12px;
     transition: box-shadow 0.2s ease;
@@ -248,6 +251,40 @@
     text-align: center;
   }
   
+  /* Ajustement pour les SVG des apps */
+  .app-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* Ajustement pour l'icône de connexion CraftID */
+  .auth-logo svg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* =========================================
+     ÉCRAN 3 : CRAFTID (Profil)
+     ========================================= */
+  #craftid-screen {
+    background: radial-gradient(circle at 50% 0%, #2a1b3d 0%, #0f111a 70%); /* Fond légèrement violet */
+  }
+  
+  /* Animation d'apparition pour la carte */
+  .profile-card {
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  #user-avatar {
+    object-fit: cover;
+    background-color: #1e243a; /* Couleur de fond si l'image charge */
+  }
+  
   /* Responsive pour mobile */
   @media (max-width: 600px) {
     .apps-grid {
@@ -260,19 +297,51 @@
       font-size: 30px;
       border-radius: 16px;
     }
+    .app-icon svg {
+      width: 32px;
+      height: 32px;
+    }
     .sub-brand {
-      display: none; /* Cache le sous-titre sur mobile */
+      display: none;
     }
   }
 
-  /* Ajustement pour les SVG des apps */
-.app-icon svg {
-  width: 40px;
-  height: 40px;
+  /* =========================================
+   FORMULAIRE D'ONBOARDING (Ajout)
+   ========================================= */
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
-/* Ajustement pour l'icône de connexion CraftID */
-.auth-logo svg {
-  width: 50px;
-  height: 50px;
+.input-group label {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(15, 17, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #8b5cf6;
+  background: rgba(15, 17, 26, 0.9);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.input-group input::placeholder {
+  color: #4b5563;
 }
