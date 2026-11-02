@@ -264,3 +264,15 @@
       display: none; /* Cache le sous-titre sur mobile */
     }
   }
+
+  /* Ajustement pour les SVG des apps */
+.app-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* Ajustement pour l'icône de connexion CraftID */
+.auth-logo svg {
+  width: 50px;
+  height: 50px;
+}
