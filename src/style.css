@@ -345,3 +345,19 @@
 .input-group input::placeholder {
   color: #4b5563;
 }
+
+/* Correction pour centrer l'écran d'onboarding */
+#onboarding-screen {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+#onboarding-screen.active {
+  display: flex;
+}
+
+#onboarding-screen .auth-container {
+  margin: auto;
+}
