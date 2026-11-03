@@ -23,7 +23,7 @@ const saveProfileBtn = document.getElementById('save-profile-btn');
 const craftidBtn = document.getElementById('craftid-btn');
 const backToHubBtn = document.getElementById('back-to-hub-btn');
 // On cible l'icône PayCraft par son lien (plus sûr que nth-child)
-const paycraftBtn = document.querySelector('a[href="#"].app:nth-child(1)'); 
+const paycraftBtn = document.getElementById('paycraft-btn');
 const backFromPaycraftBtn = document.getElementById('back-from-paycraft-btn');
 
 // --- GESTION DES ÉCRANS ---
