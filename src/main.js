@@ -33,20 +33,32 @@ function showScreen(screenToShow) {
 
 // --- LOGIQUE PRINCIPALE (Session & Profil) ---
 async function checkUser() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError) {
+    console.error("Erreur session:", sessionError);
+    showScreen(loginScreen);
+    return;
+  }
 
   if (!session) {
     showScreen(loginScreen);
     return;
   }
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+  // On cherche le profil
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .maybeSingle(); // maybeSingle() évite les erreurs si la table est vide
 
-  // Si le profil n'existe pas, on affiche le formulaire
-  if (!profile) {
+  console.log("Résultat recherche profil :", profile, profileError);
+
+  // Si pas de profil (ou erreur), on affiche le formulaire
+  if (!profile || profileError) {
     showScreen(onboardingScreen);
   } else {
-    // Si le profil existe, on affiche le hub
     showScreen(hubScreen);
   }
 }
