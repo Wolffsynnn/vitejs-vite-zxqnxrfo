@@ -151,7 +151,7 @@
       </main>
     </div>
 
-    <!-- ÉCRAN 4 : PAYCRAFT (Banque) -->
+        <!-- ÉCRAN 4 : PAYCRAFT (Banque) -->
         <div id="paycraft-screen" class="screen">
           <header class="top-bar">
             <div class="top-bar-left">
@@ -167,35 +167,79 @@
           <main class="hub-main" style="align-items: center; justify-content: center;">
             <div class="profile-card" style="background: rgba(30, 36, 58, 0.6); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); text-align: center; max-width: 450px; width: 100%;">
               
-              <div style="margin-bottom: 30px;">
+              <!-- En-tête : Solde -->
+              <div style="margin-bottom: 20px;">
                 <p style="font-size: 14px; color: #9ca3af; margin-bottom: 5px;">Votre solde</p>
                 <h2 id="paycraft-balance" style="font-size: 36px; font-weight: 800; color: #22c55e;">0 Euria</h2>
                 <p id="paycraft-code" style="font-size: 13px; color: #8b5cf6; font-family: monospace; margin-top: 5px;">EURIA-0000-0000</p>
               </div>
     
-              <!-- Formulaire de virement -->
-              <form id="transfer-form" style="text-align: left; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                <h3 style="font-size: 16px; margin-bottom: 15px; color: #fff;">Faire un virement</h3>
+              <!-- Menu Principal (4 Boutons) -->
+              <div id="paycraft-menu" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                <button class="paycraft-menu-btn" data-target="virement">💸 Virement</button>
+                <button class="paycraft-menu-btn" data-target="demande">🙏 Demander</button>
+                <button class="paycraft-menu-btn" data-target="signalement">🚨 Signaler</button>
+                <button class="paycraft-menu-btn" data-target="historique">📜 Historique</button>
+              </div>
+    
+              <!-- Zone des formulaires (cachée par défaut) -->
+              <div id="paycraft-content" style="display: none; text-align: left; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
                 
-                <div class="input-group">
-                  <label>Destinataire (Pseudo ou Code EURIA)</label>
-                  <input type="text" id="transfer-receiver" required placeholder="Ex: JeanDuCraft ou EURIA-1234-5678">
-                </div>
-                
-                <div class="input-group">
-                  <label>Montant (Euria)</label>
-                  <input type="number" id="transfer-amount" required min="1" placeholder="Ex: 500">
-                </div>
-                
-                <div class="input-group">
-                  <label>Motif du paiement</label>
-                  <input type="text" id="transfer-reason" required placeholder="Ex: Achat d'un terrain">
+                <!-- Formulaire Virement -->
+                <form id="form-virement" class="paycraft-form" style="display: none;">
+                  <h3 style="font-size: 16px; margin-bottom: 15px; color: #fff;">Faire un virement</h3>
+                  <div class="input-group">
+                    <label>Destinataire (Pseudo ou Code EURIA)</label>
+                    <input type="text" id="transfer-receiver" required placeholder="Ex: JeanDuCraft">
+                  </div>
+                  <div class="input-group">
+                    <label>Montant (Euria)</label>
+                    <input type="number" id="transfer-amount" required min="1">
+                  </div>
+                  <div class="input-group">
+                    <label>Motif</label>
+                    <input type="text" id="transfer-reason" required placeholder="Ex: Achat de terrain">
+                  </div>
+                  <button type="submit" class="btn-discord" style="background-color: #22c55e;">Envoyer</button>
+                </form>
+    
+                <!-- Formulaire Demande d'argent -->
+                <form id="form-demande" class="paycraft-form" style="display: none;">
+                  <h3 style="font-size: 16px; margin-bottom: 15px; color: #fff;">Demander de l'argent (Aides, Prêts)</h3>
+                  <div class="input-group">
+                    <label>Montant souhaité (Euria)</label>
+                    <input type="number" id="demande-amount" required min="1">
+                  </div>
+                  <div class="input-group">
+                    <label>Raison de la demande</label>
+                    <textarea id="demande-reason" required rows="3" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(15,17,26,0.6); border: 1px solid rgba(255,255,255,0.1); color: white;"></textarea>
+                  </div>
+                  <button type="submit" class="btn-discord" style="background-color: #8b5cf6;">Envoyer la demande</button>
+                </form>
+    
+                <!-- Formulaire Signalement -->
+                <form id="form-signalement" class="paycraft-form" style="display: none;">
+                  <h3 style="font-size: 16px; margin-bottom: 15px; color: #fff;">Signaler une fraude / erreur</h3>
+                  <div class="input-group">
+                    <label>Joueur concerné (Pseudo)</label>
+                    <input type="text" id="signal-player" required>
+                  </div>
+                  <div class="input-group">
+                    <label>Détails du problème</label>
+                    <textarea id="signal-reason" required rows="3" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(15,17,26,0.6); border: 1px solid rgba(255,255,255,0.1); color: white;"></textarea>
+                  </div>
+                  <button type="submit" class="btn-discord" style="background-color: #ef4444;">Signaler</button>
+                </form>
+    
+                <!-- Historique (Vide pour l'instant) -->
+                <div id="form-historique" class="paycraft-form" style="display: none;">
+                  <h3 style="font-size: 16px; margin-bottom: 15px; color: #fff;">Dernières transactions</h3>
+                  <p style="color: #9ca3af; font-size: 14px;">L'historique s'affichera ici bientôt.</p>
                 </div>
     
-                <button type="submit" class="btn-discord" style="background-color: #22c55e; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); margin-top: 15px;">
-                  Envoyer les Eurias
-                </button>
-              </form>
+                <!-- Bouton retour au menu PayCraft -->
+                <button id="paycraft-back-menu" style="background: none; border: none; color: #9ca3af; margin-top: 15px; cursor: pointer; text-decoration: underline;">← Retour au menu</button>
+              </div>
     
             </div>
           </main>
