@@ -117,7 +117,7 @@
         </div>
       </main>
     </div>
-
+        
     <!-- ÉCRAN 3 : CRAFTID (Profil) -->
     <div id="craftid-screen" class="screen">
       <header class="top-bar">
@@ -150,6 +150,56 @@
         </div>
       </main>
     </div>
+
+    <!-- ÉCRAN 4 : PAYCRAFT (Banque) -->
+        <div id="paycraft-screen" class="screen">
+          <header class="top-bar">
+            <div class="top-bar-left">
+              <button id="back-from-paycraft-btn" class="icon-btn" title="Retour">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px; color: #9ca3af;">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <span class="sub-brand" style="margin-left: 10px;">PayCraft • Banque</span>
+            </div>
+          </header>
+    
+          <main class="hub-main" style="align-items: center; justify-content: center;">
+            <div class="profile-card" style="background: rgba(30, 36, 58, 0.6); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); text-align: center; max-width: 450px; width: 100%;">
+              
+              <div style="margin-bottom: 30px;">
+                <p style="font-size: 14px; color: #9ca3af; margin-bottom: 5px;">Votre solde</p>
+                <h2 id="paycraft-balance" style="font-size: 36px; font-weight: 800; color: #22c55e;">0 Euria</h2>
+                <p id="paycraft-code" style="font-size: 13px; color: #8b5cf6; font-family: monospace; margin-top: 5px;">EURIA-0000-0000</p>
+              </div>
+    
+              <!-- Formulaire de virement -->
+              <form id="transfer-form" style="text-align: left; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <h3 style="font-size: 16px; margin-bottom: 15px; color: #fff;">Faire un virement</h3>
+                
+                <div class="input-group">
+                  <label>Destinataire (Pseudo ou Code EURIA)</label>
+                  <input type="text" id="transfer-receiver" required placeholder="Ex: JeanDuCraft ou EURIA-1234-5678">
+                </div>
+                
+                <div class="input-group">
+                  <label>Montant (Euria)</label>
+                  <input type="number" id="transfer-amount" required min="1" placeholder="Ex: 500">
+                </div>
+                
+                <div class="input-group">
+                  <label>Motif du paiement</label>
+                  <input type="text" id="transfer-reason" required placeholder="Ex: Achat d'un terrain">
+                </div>
+    
+                <button type="submit" class="btn-discord" style="background-color: #22c55e; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); margin-top: 15px;">
+                  Envoyer les Eurias
+                </button>
+              </form>
+    
+            </div>
+          </main>
+        </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
