@@ -42,9 +42,11 @@ async function checkUser() {
 
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
 
+  // Si le profil n'existe pas, on affiche le formulaire
   if (!profile) {
     showScreen(onboardingScreen);
   } else {
+    // Si le profil existe, on affiche le hub
     showScreen(hubScreen);
   }
 }
