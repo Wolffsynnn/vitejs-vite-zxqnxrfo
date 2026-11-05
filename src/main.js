@@ -104,7 +104,7 @@ if (onboardingForm) {
 
     const euriaCode = 'EURIA-' + Math.floor(1000 + Math.random() * 9000) + '-' + Math.floor(1000 + Math.random() * 9000);
 
-    const { error } = await supabase.from('profiles').insert([{ 
+    const { error } = await supabase.from('profiles').upsert([{ 
       id: session.user.id, 
       pseudo_euria: pseudoEuria, 
       pseudo_minecraft: pseudoMc, 
