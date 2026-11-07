@@ -35,7 +35,9 @@ function showScreen(screenToShow) {
 
 // --- LOGIQUE PRINCIPALE (Session & Profil) ---
 async function checkUser() {
-  // On attend un petit peu que Supabase charge la session (surtout après Discord)
+  // 1. On attend 1 seconde pour être sûr que Supabase a bien lu l'URL de connexion Discord
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
   if (sessionError || !session) {
@@ -43,18 +45,14 @@ async function checkUser() {
     return;
   }
 
-  // On cherche le profil
-  const { data: profile, error: profileError } = await supabase
+  // 2. On cherche le profil
+  const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', session.user.id)
     .maybeSingle();
 
-  if (profileError) {
-    console.error("Erreur recherche profil:", profileError);
-  }
-
-  // Si pas de profil, on force le formulaire !
+  // 3. Si le profil n'existe pas, on affiche le formulaire !
   if (!profile) {
     showScreen(onboardingScreen);
   } else {
