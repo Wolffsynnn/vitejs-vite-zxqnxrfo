@@ -214,41 +214,47 @@ if (virementForm) {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
-    // On nettoie l'entrée (on enlève les espaces)
     const receiverInput = document.getElementById('transfer-receiver').value.trim();
     const amount = parseInt(document.getElementById('transfer-amount').value);
     const reason = document.getElementById('transfer-reason').value.trim();
 
-    // Recherche intelligente : On ignore les majuscules et on cherche le pseudo OU le code
-    const { data: receiver, error: searchError } = await supabase
+    // 1. Chercher le destinataire (insensible à la casse)
+    const { data: receiver } = await supabase
       .from('profiles')
       .select('id, pseudo_euria, balance')
       .or(`pseudo_euria.ilike.%${receiverInput}%,euria_code.ilike.%${receiverInput}%`)
       .maybeSingle();
 
-    if (searchError) console.error("Erreur de recherche:", searchError);
-    if (!receiver) return alert("❌ Destinataire introuvable. Vérifie l'orthographe (ou les majuscules).");
-
+    if (!receiver) return alert("❌ Destinataire introuvable.");
     if (receiver.id === session.user.id) return alert("❌ Impossible de s'envoyer de l'argent.");
 
+    // 2. Vérifier le solde de l'envoyeur
     const { data: sender } = await supabase.from('profiles').select('balance').eq('id', session.user.id).single();
     if (sender.balance < amount) return alert("❌ Fonds insuffisants.");
 
     if (!window.confirm(`Envoyer ${amount} Euria à ${receiver.pseudo_euria} ?`)) return;
 
-    // Mise à jour des soldes
-    await supabase.from('profiles').update({ balance: sender.balance - amount }).eq('id', session.user.id);
-    await supabase.from('profiles').update({ balance: receiver.balance + amount }).eq('id', receiver.id);
-    
-    // Historique
-    await supabase.from('transactions').insert({ sender_id: session.user.id, receiver_id: receiver.id, amount, reason });
+    // 3. Effectuer le virement avec la fonction sécurisée
+    const { error } = await supabase.rpc('transfer_money', {
+      sender: session.user.id,
+      receiver: receiver.id,
+      amount: amount
+    });
 
-    alert(`✅ Virement de ${amount} Euria effectué à ${receiver.pseudo_euria} !`);
-    document.getElementById('paycraft-balance').innerText = (sender.balance - amount) + " Euria";
-    virementForm.reset();
-    if (paycraftBackMenuBtn) paycraftBackMenuBtn.click(); 
+    if (error) {
+      console.error(error);
+      alert("❌ Erreur lors du virement.");
+    } else {
+      await supabase.from('transactions').insert({ sender_id: session.user.id, receiver_id: receiver.id, amount, reason });
+      
+      alert(`✅ Virement de ${amount} Euria effectué à ${receiver.pseudo_euria} !`);
+      document.getElementById('paycraft-balance').innerText = (sender.balance - amount) + " Euria";
+      virementForm.reset();
+      if (paycraftBackMenuBtn) paycraftBackMenuBtn.click(); 
+    }
   });
 }
+
 // --- FORMULAIRE 2 : DEMANDE D'ARGENT ---
 const demandeForm = document.getElementById('form-demande');
 if (demandeForm) {
