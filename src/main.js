@@ -4,6 +4,20 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://beythkafwrxypqhlhdjl.supabase.co';
 const supabaseKey = 'sb_publishable_88QM0sCElcl_eIvRViVjrg_gYVYoVmn';
 const supabase = createClient(supabaseUrl, supabaseKey);
+// Fonction de notification personnalisée
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
+  container.appendChild(toast);
+
+  // Fait disparaître la notif après 3 secondes
+  setTimeout(() => {
+    toast.classList.add('hiding');
+    toast.addEventListener('animationend', () => toast.remove());
+  }, 3000);
+}
 
 // --- RÉCUPÉRATION SÉCURISÉE DES ÉLÉMENTS ---
 const loginScreen = document.getElementById('login-screen');
@@ -176,7 +190,7 @@ virementForm.addEventListener('submit', async (e) => {
   const reason = document.getElementById('transfer-reason').value.trim();
 
   const { data: receiver } = await supabase.from('profiles').select('id, pseudo_euria, balance').or(`pseudo_euria.ilike.%${receiverInput}%,euria_code.ilike.%${receiverInput}%`).maybeSingle();
-  if (!receiver) return alert("❌ Destinataire introuvable.");
+  if (!receiver) return showToast("Destinataire introuvable.", "error");
   if (receiver.id === session.user.id) return alert("❌ Impossible de s'envoyer de l'argent.");
   const { data: sender } = await supabase.from('profiles').select('balance').eq('id', session.user.id).single();
   if (sender.balance < amount) return alert("❌ Fonds insuffisants.");
@@ -186,7 +200,7 @@ virementForm.addEventListener('submit', async (e) => {
   if (error) return alert("❌ Erreur lors du virement.");
 
   await supabase.from('transactions').insert({ sender_id: session.user.id, receiver_id: receiver.id, amount, reason });
-  alert(`✅ Virement effectué !`);
+  showToast(`Virement de ${amount} Euria effectué !`, "success");
   document.getElementById('paycraft-balance').innerText = (sender.balance - amount) + " Euria";
   virementForm.reset();
   paycraftBackMenuBtn.click();
@@ -232,7 +246,7 @@ maploadBtn.addEventListener('click', (e) => {
 });
 
 document.getElementById('btn-view-map').addEventListener('click', () => {
-  alert("🗺️ Désolé, la carte interactive est en cours de développement et sera disponible très bientôt !");
+  showToast("La carte interactive est en cours de développement.", "info");
 });
 
 document.getElementById('btn-buy-land').addEventListener('click', () => {
