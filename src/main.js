@@ -331,8 +331,29 @@ async function loadConversations() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
 
-  const { data: convs } = await supabase.from('conversations').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false });
+  // On récupère ton profil pour voir si tu es admin
+  const { data: myProfile, error } = await supabase.from('profiles').select('is_admin').eq('id', session.user.id).single();
   
+  if (error) {
+    console.error("Erreur de lecture du profil admin :", error);
+  }
+
+  const isAdmin = myProfile?.is_admin || false;
+  console.log("Est-ce que je suis admin ?", isAdmin); // Ça affichera true ou false dans la console (F12)
+
+  // Si tu es admin, on charge TOUTES les conversations
+  let query = supabase.from('conversations').select('*').order('created_at', { ascending: false });
+  
+  if (!isAdmin) {
+    query = query.eq('user_id', session.user.id); // Sinon, juste les tiennes
+  }
+
+  const { data: convs, error: convError } = await query;
+  
+  if (convError) {
+    console.error("Erreur de chargement des conversations :", convError);
+  }
+
   const list = document.getElementById('conversations-list');
   list.innerHTML = '';
 
@@ -347,10 +368,7 @@ async function loadConversations() {
     div.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
     div.style.cursor = 'pointer';
     div.style.fontSize = '14px';
-    div.style.transition = 'background 0.2s';
-    div.innerText = conv.subject;
-    div.onmouseover = () => div.style.background = 'rgba(255,255,255,0.1)';
-    div.onmouseout = () => div.style.background = 'transparent';
+    div.innerText = conv.subject + (isAdmin ? ' 👑' : '');
     div.onclick = () => openConversation(conv.id, conv.subject);
     list.appendChild(div);
   });
