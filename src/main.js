@@ -450,3 +450,158 @@ backToHubBtn.addEventListener('click', () => showScreen(hubScreen));
 backFromPaycraftBtn.addEventListener('click', () => showScreen(hubScreen));
 backFromMaploadBtn.addEventListener('click', () => showScreen(hubScreen));
 backFromEmessageBtn.addEventListener('click', () => showScreen(hubScreen));
+
+// ==========================================
+// --- LOGIQUE ADMINZONE ---
+// ==========================================
+const adminzoneScreen = document.getElementById('adminzone-screen');
+const backFromAdminzoneBtn = document.getElementById('back-from-adminzone-btn');
+const adminContent = document.getElementById('admin-content');
+let currentAdminTab = 'lands';
+
+// Ouvrir AdminZone
+adminzoneBtn.addEventListener('click', async (e) => {
+  e.preventDefault();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return;
+
+  // Vérifier si admin
+  const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', session.user.id).single();
+  
+  if (!profile || !profile.is_admin) {
+    showToast("⛔ Accès refusé. Vous n'avez pas les permissions d'administrateur.", "error");
+    return;
+  }
+
+  showScreen(adminzoneScreen);
+  loadAdminData('lands');
+});
+
+// Retour au Hub
+backFromAdminzoneBtn.addEventListener('click', () => showScreen(hubScreen));
+
+// Gestion des onglets
+document.querySelectorAll('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    document.querySelectorAll('.admin-tab').forEach(t => {
+      t.classList.remove('active');
+      t.style.color = '#9ca3af';
+    });
+    e.target.classList.add('active');
+    e.target.style.color = 'white';
+    
+    currentAdminTab = e.target.getAttribute('data-tab');
+    loadAdminData(currentAdminTab);
+  });
+});
+
+// Fonction pour charger les données selon l'onglet
+async function loadAdminData(tab) {
+  adminContent.innerHTML = '<p style="color: #9ca3af; text-align: center;">Chargement...</p>';
+  
+  if (tab === 'lands') {
+    // Charger les demandes de terrains
+    const { data: lands, error } = await supabase.from('land_requests').select('*').eq('status', 'PENDING').order('created_at', { ascending: false });
+    if (error || !lands || lands.length === 0) {
+      adminContent.innerHTML = '<p style="color: #9ca3af; text-align: center;">Aucune demande de terrain en attente.</p>';
+      return;
+    }
+    
+    adminContent.innerHTML = '';
+    // On récupère les pseudos pour faire joli
+    for (const land of lands) {
+       const { data: user } = await supabase.from('profiles').select('pseudo_euria').eq('id', land.user_id).single();
+       const pseudo = user ? user.pseudo_euria : 'Inconnu';
+       
+       const div = document.createElement('div');
+       div.className = 'admin-request-card';
+       div.innerHTML = `
+        <div class="admin-request-info">
+          <h4>Terrain ${land.size} (${land.terrain_name})</h4>
+          <p>Par: <span>${pseudo}</span> | Prix: <span>${land.price} Euria</span></p>
+          <p>Coordonnées: ${land.coordinates}</p>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-accept" onclick="handleAction('lands', '${land.id}', 'APPROVED', '${land.user_id}', ${land.price})">Accepter</button>
+          <button class="btn-reject" onclick="handleAction('lands', '${land.id}', 'REJECTED')">Refuser</button>
+        </div>
+       `;
+       adminContent.appendChild(div);
+    }
+  } 
+  else if (tab === 'money') {
+    // Charger les demandes d'argent
+    const { data: reqs, error } = await supabase.from('money_requests').select('*').eq('status', 'PENDING').order('created_at', { ascending: false });
+    if (error || !reqs || reqs.length === 0) {
+      adminContent.innerHTML = '<p style="color: #9ca3af; text-align: center;">Aucune demande d\'argent en attente.</p>';
+      return;
+    }
+    
+    adminContent.innerHTML = '';
+    for (const req of reqs) {
+       const { data: user } = await supabase.from('profiles').select('pseudo_euria').eq('id', req.user_id).single();
+       const pseudo = user ? user.pseudo_euria : 'Inconnu';
+       
+       const div = document.createElement('div');
+       div.className = 'admin-request-card';
+       div.innerHTML = `
+        <div class="admin-request-info">
+          <h4>Demande de ${req.amount} Euria</h4>
+          <p>Par: <span>${pseudo}</span></p>
+          <p>Motif: ${req.reason}</p>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-accept" onclick="handleAction('money', '${req.id}', 'APPROVED', '${req.user_id}', ${req.amount})">Accepter</button>
+          <button class="btn-reject" onclick="handleAction('money', '${req.id}', 'REJECTED')">Refuser</button>
+        </div>
+       `;
+       adminContent.appendChild(div);
+    }
+  }
+  else if (tab === 'signals') {
+    // Charger les signalements
+    const { data: signals, error } = await supabase.from('money_requests').select('*').eq('status', 'SIGNAL').order('created_at', { ascending: false });
+    if (error || !signals || signals.length === 0) {
+      adminContent.innerHTML = '<p style="color: #9ca3af; text-align: center;">Aucun signalement.</p>';
+      return;
+    }
+    
+    adminContent.innerHTML = '';
+    for (const sig of signals) {
+       const div = document.createElement('div');
+       div.className = 'admin-request-card';
+       div.innerHTML = `
+        <div class="admin-request-info">
+          <h4>Signalement</h4>
+          <p>${sig.reason}</p>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-reject" onclick="handleAction('signals', '${sig.id}', 'RESOLVED')">Marquer résolu</button>
+        </div>
+       `;
+       adminContent.appendChild(div);
+    }
+  }
+}
+
+// Fonction globale pour accepter ou refuser
+window.handleAction = async function(type, id, newStatus, userId = null, amount = 0) {
+  if (!window.confirm(`Confirmer l'action (${newStatus}) ?`)) return;
+
+  if (type === 'lands' || type === 'money') {
+    await supabase.from(type === 'lands' ? 'land_requests' : 'money_requests').update({ status: newStatus }).eq('id', id);
+    
+    // Si on accepte une demande d'argent, on donne l'argent au joueur !
+    if (type === 'money' && newStatus === 'APPROVED' && amount > 0) {
+      const { data: user } = await supabase.from('profiles').select('balance').eq('id', userId).single();
+      if (user) {
+        await supabase.from('profiles').update({ balance: user.balance + amount }).eq('id', userId);
+      }
+    }
+  } else if (type === 'signals') {
+    await supabase.from('money_requests').update({ status: newStatus }).eq('id', id);
+  }
+
+  showToast("Action effectuée avec succès !", "success");
+  loadAdminData(currentAdminTab); // Recharge la liste
+}
